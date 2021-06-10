@@ -1,0 +1,33 @@
+﻿@using SharedDemo.Performance.Services
+
+<div class="function-block-container">
+    <FunctionBlockTitleComponent Name="@Node.Name"
+                                 NameBackgroundColor="@Node.NameBackgroundColor"
+                                 NameForeColor="@Node.NameForeColor" />
+
+    <FunctionBlockRunModeComponent CycleFrequency="@Node.CycleFrequency"
+                                   CycleOffset="@Node.CycleOffset"
+                                   CyclePriority="@Node.CyclePriority"
+                                   NodeId="@Node.ClusterNodeId"
+                                   RunMode="@Node.RunMode" />
+
+    @for (var i = 0; i < Node.Connectors.Count; i++)
+    {
+        var inputConnector = Node.Connectors[i][0];
+        var outputConnector = Node.Connectors[i][1];
+
+        <div class="connector-row @(i == 3 ? "divider" : "") @(i == Node.Connectors.Count - 1 ? "last-row" : "")">
+            @if (inputConnector != null)
+            {
+                <FunctionBlockInputConnectorComponent NodeConnector="@inputConnector" />
+            }
+
+            @if (outputConnector != null)
+            {
+                <FunctionBlockOutputConnectorComponent NodeConnector="@outputConnector" />
+            }
+        </div>
+    }
+
+    <FunctionBlockSelection IsSelected="@Node.Selected" />
+</div>

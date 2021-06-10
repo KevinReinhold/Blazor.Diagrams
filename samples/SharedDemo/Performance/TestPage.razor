@@ -1,0 +1,18 @@
+﻿@page "/perf-demo"
+@layout SharedDemo.Layouts.DemoLayout
+@inject LayoutData LayoutData
+
+<div style="z-index: 10; border-bottom: 1px solid lightgray;">
+    <label>amount:</label>
+    <input @bind-value="@_blockSpawnAmount" type="number" />
+
+    <button class="btn btn-success btn-sm m-sm-1" @onclick="@(() => PerfTestAddSmallBlock())">Spawn Switches</button>
+    <button class="btn btn-success btn-sm m-sm-1" @onclick="@(() => PerfTestAddLargeBlock())">Spawn Sonos</button>
+    <button class="btn btn-success btn-sm m-sm-1" @onclick="@(() => PerfTestAddSmallAndLargeBlocks())">Spawn Switch & Sonos</button>
+</div>
+
+<div class="diagram-container">
+    <CascadingValue Value="@_diagram">
+        <DiagramCanvas />
+    </CascadingValue>
+</div>

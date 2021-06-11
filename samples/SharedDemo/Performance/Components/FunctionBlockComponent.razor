@@ -11,23 +11,27 @@
                                    NodeId="@Node.ClusterNodeId"
                                    RunMode="@Node.RunMode" />
 
-    @for (var i = 0; i < Node.Connectors.Count; i++)
-    {
-        var inputConnector = Node.Connectors[i][0];
-        var outputConnector = Node.Connectors[i][1];
+    <CascadingValue IsFixed="true"
+                    Value="@_portCollection">
 
-        <div class="connector-row @(i == 3 ? "divider" : "") @(i == Node.Connectors.Count - 1 ? "last-row" : "")">
-            @if (inputConnector != null)
-            {
-                <FunctionBlockInputConnectorComponent NodeConnector="@inputConnector" />
-            }
+        @for (var i = 0; i < Node.Connectors.Count; i++)
+        {
+            var inputConnector = Node.Connectors[i][0];
+            var outputConnector = Node.Connectors[i][1];
 
-            @if (outputConnector != null)
-            {
-                <FunctionBlockOutputConnectorComponent NodeConnector="@outputConnector" />
-            }
-        </div>
-    }
+            <div class="connector-row @(i == 3 ? "divider" : "") @(i == Node.Connectors.Count - 1 ? "last-row" : "")">
+                @if (inputConnector != null)
+                {
+                    <FunctionBlockInputConnectorComponent NodeConnector="@inputConnector" />
+                }
+
+                @if (outputConnector != null)
+                {
+                    <FunctionBlockOutputConnectorComponent NodeConnector="@outputConnector" />
+                }
+            </div>
+        }
+    </CascadingValue>
 
     <FunctionBlockSelection IsSelected="@Node.Selected" />
 </div>

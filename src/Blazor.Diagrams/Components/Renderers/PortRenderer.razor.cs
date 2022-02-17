@@ -14,6 +14,8 @@ namespace Blazor.Diagrams.Components.Renderers
     {
         private bool _shouldRender = true;
         private ElementReference _element;
+        private bool _updatingDimensions;
+        private bool _shouldRefreshPort;
 
         [CascadingParameter]
         public Diagram Diagram { get; set; }
@@ -90,6 +92,7 @@ namespace Blazor.Diagrams.Components.Renderers
             var watch = new Stopwatch();
             watch.Restart();
 
+            _updatingDimensions = true;
             var zoom = Diagram.Zoom;
             var pan = Diagram.Pan;
 
@@ -98,17 +101,29 @@ namespace Blazor.Diagrams.Components.Renderers
                 (portRectangle.Top - Diagram.Container.Top - pan.Y) / zoom);
 
             Port.Initialized = true;
+            _updatingDimensions = false;
 
             watch.Stop();
             //Console.Out.WriteLine($"## [{nameof(PortRenderer)}] [{Port.Id}] [START: UpdateDimensions] rendered in {watch.Elapsed.TotalMilliseconds}ms");
 
-            // We don't really need to refresh the port again,
-            // let's just refresh the links so that they use the new port's position
-            Port.RefreshLinks();
+            if (_shouldRefreshPort)
+            {
+                _shouldRefreshPort = false;
+                Port.RefreshAll();
+            }
+            else
+            {
+                Port.RefreshLinks();
+            }
         }
 
         private void OnPortChanged()
         {
+            // If an update is ongoing and the port is refreshed again,
+            // it's highly likely the port needs to be refreshed (e.g. link added)
+            if (_updatingDimensions)
+                _shouldRefreshPort = true;
+
             if (Port.Initialized)
             {
                 _shouldRender = true;
